@@ -1,20 +1,21 @@
 # coding=utf-8
 
 from django import forms
+from django.core.exceptions import ObjectDoesNotExist
+
 from edc_base.modelform_validators import FormValidator
 from edc_constants.utils import get_display
 
 from plot.choices import PLOT_STATUS
 from plot.constants import ACCESSIBLE, RESIDENTIAL_HABITABLE
-from django.core.exceptions import ObjectDoesNotExist
 
 
 class PlotFormValidator(FormValidator):
 
-    def __init__(self, allow_add_plot_map_areas=None, special_locations=None,
+    def __init__(self, add_plot_map_areas=None, special_locations=None,
                  supervisor_groups=None, current_user=None, cleaned_data=None, **kwargs):
         super().__init__(cleaned_data=cleaned_data, **kwargs)
-        self.allow_add_plot_map_areas = allow_add_plot_map_areas or []
+        self.add_plot_map_areas = add_plot_map_areas or []
         self.current_user = current_user
         self.is_ess = cleaned_data.get('ess')
         self.map_area = cleaned_data.get('map_area')
@@ -77,7 +78,7 @@ class PlotFormValidator(FormValidator):
         """Raise if new plots not in allowed map_area and not ess
         and not residential.
         """
-        if self.map_area not in self.allow_add_plot_map_areas:
+        if self.map_area not in self.add_plot_map_areas:
             raise forms.ValidationError(
                 f'Plots may not be added in this map area. '
                 f'Got map area=\'{self.map_area}\'.', code='invalid_new_plot')

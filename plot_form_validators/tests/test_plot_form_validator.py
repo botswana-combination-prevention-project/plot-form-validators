@@ -15,7 +15,7 @@ class TestAddPlot(TestCase):
         cleaned_data = dict(
             map_area=None, ess=False, status=RESIDENTIAL_HABITABLE)
         form_validator = PlotFormValidator(
-            allow_add_plot_map_areas=[],
+            add_plot_map_areas=[],
             instance=Plot(),
             cleaned_data=cleaned_data)
         self.assertRaises(forms.ValidationError, form_validator.validate)
@@ -25,7 +25,7 @@ class TestAddPlot(TestCase):
         cleaned_data = dict(
             map_area='leiden', ess=False, status=RESIDENTIAL_HABITABLE)
         form_validator = PlotFormValidator(
-            allow_add_plot_map_areas=['leiden'],
+            add_plot_map_areas=['leiden'],
             instance=Plot(),
             cleaned_data=cleaned_data)
         self.assertRaises(forms.ValidationError, form_validator.validate)
@@ -36,7 +36,7 @@ class TestAddPlot(TestCase):
             map_area='leiden', ess=True, status=RESIDENTIAL_HABITABLE,
             household_count=3, eligible_members=3)
         form_validator = PlotFormValidator(
-            allow_add_plot_map_areas=['leiden'],
+            add_plot_map_areas=['leiden'],
             instance=Plot(),
             cleaned_data=cleaned_data)
         try:
@@ -48,7 +48,7 @@ class TestAddPlot(TestCase):
         cleaned_data = dict(
             map_area='leiden', ess=True, status=RESIDENTIAL_NOT_HABITABLE)
         form_validator = PlotFormValidator(
-            allow_add_plot_map_areas=['leiden'],
+            add_plot_map_areas=['leiden'],
             instance=Plot(),
             cleaned_data=cleaned_data)
         self.assertRaises(forms.ValidationError, form_validator.validate)
@@ -59,7 +59,7 @@ class TestAddPlot(TestCase):
             map_area='leiden', ess=True, status=RESIDENTIAL_HABITABLE,
             household_count=3, eligible_members=3)
         form_validator = PlotFormValidator(
-            allow_add_plot_map_areas=['leiden'],
+            add_plot_map_areas=['leiden'],
             instance=Plot(),
             cleaned_data=cleaned_data)
         try:
@@ -72,7 +72,7 @@ class TestRequiresPlotLogEntry(TestCase):
     def setUp(self):
         self.cleaned_data = dict(
             map_area='leiden', ess=True)
-        self.allow_add_plot_map_areas = ['leiden']
+        self.add_plot_map_areas = ['leiden']
         self.plot = Plot.objects.create()
 
     def test_plot_log_required(self):
@@ -123,7 +123,7 @@ class TestRadius(TestCase):
         self.cleaned_data = dict(
             map_area='leiden', ess=True, status=RESIDENTIAL_HABITABLE,
             household_count=3, eligible_members=3)
-        self.allow_add_plot_map_areas = ['leiden']
+        self.add_plot_map_areas = ['leiden']
         self.current_user = User.objects.create(username='erik')
         self.group = Group.objects.create(name='supervisor')
         # statisfy plot log validation
@@ -134,7 +134,7 @@ class TestRadius(TestCase):
     def test_cannot_change_radius_not_supervisor(self):
         self.cleaned_data.update(target_radius=5)
         form_validator = PlotFormValidator(
-            allow_add_plot_map_areas=self.allow_add_plot_map_areas,
+            add_plot_map_areas=self.add_plot_map_areas,
             instance=self.plot,
             supervisor_groups=[],
             current_user=self.current_user,
@@ -148,7 +148,7 @@ class TestRadius(TestCase):
         self.cleaned_data.update(target_radius=5)
         self.current_user.groups.add(self.group)
         form_validator = PlotFormValidator(
-            allow_add_plot_map_areas=self.allow_add_plot_map_areas,
+            add_plot_map_areas=self.add_plot_map_areas,
             instance=self.plot,
             supervisor_groups=['supervisor'],
             current_user=self.current_user,
