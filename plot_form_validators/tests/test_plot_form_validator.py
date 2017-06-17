@@ -2,7 +2,8 @@ from django import forms
 from django.contrib.auth.models import User, Group
 from django.test import TestCase, tag
 
-from plot.constants import ACCESSIBLE, RESIDENTIAL_HABITABLE, RESIDENTIAL_NOT_HABITABLE, INACCESSIBLE
+from plot.constants import ACCESSIBLE, RESIDENTIAL_HABITABLE
+from plot.constants import RESIDENTIAL_NOT_HABITABLE, INACCESSIBLE
 
 from ..plot_form_validator import PlotFormValidator
 from .models import Plot, PlotLog, PlotLogEntry
